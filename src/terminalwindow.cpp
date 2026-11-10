@@ -41,9 +41,11 @@ using cutefish::i18n::tr;
 using cutefish::i18n::trn;
 namespace strings = cutefish::base::strings;
 
-static constexpr double kHeaderHeight = 40;
-// The tab bar's row under the header, shown with more than one tab.
-static constexpr double kTabBarHeight = 38;
+static constexpr double kHeaderHeight = 32;
+// The tab bar's row under the header, shown with more than one tab: its
+// track as far under the window controls as they are from the top.
+static constexpr double kTabBarHeight = 34;
+static constexpr double kTrackBottom = 4;
 // What a tab dragged between windows of this process carries.
 static constexpr const char* kTabMimeType = "application/x-cutefish-terminal-tab";
 // The "+" button at the tab bar's end.
@@ -67,7 +69,7 @@ public:
         tabBar->setName("tabBar");
         tabBar->setTabWidthRange(140, 0);
         const double spacing = Theme::current().smallSpacing;
-        tabBar->setTrackInsets({spacing, 4, kNewTabStartGap + kNewTabButtonSize + kNewTabEndMargin, 4});
+        tabBar->setTrackInsets({spacing, 0, kNewTabStartGap + kNewTabButtonSize + kNewTabEndMargin, kTrackBottom});
         tabBar->setPressedFeedback(true);
         tabBar->setVisible(false);
         newTab = addChild<HeaderButton>("add", kNewTabButtonSize);
@@ -75,7 +77,7 @@ public:
         newTab->setPlateAlphas({0.05, 0.10}, {0.05, 0.10});
         newTab->setVisible(false);
         header = addChild<WindowHeader>(kHeaderHeight);
-        header->setButtonMargin(4);
+        header->setButtonMargin(0);
         header->setButtonsCentered(true);
     }
 
@@ -98,7 +100,7 @@ protected:
         tabBar->setGeometry({0, kHeaderHeight, width, tabBarHeight});
         newTab->setVisible(tabsShown);
         newTab->setGeometry({width - kNewTabEndMargin - kNewTabButtonSize,
-                             kHeaderHeight + rounding::centeredStart(tabBarHeight, kNewTabButtonSize),
+                             kHeaderHeight + rounding::centeredStart(kTabBarHeight - kTrackBottom, kNewTabButtonSize),
                              kNewTabButtonSize, kNewTabButtonSize});
         const double top = barsHeight();
         pages->setGeometry({0, top, width, std::max(0.0, height - top)});
@@ -183,7 +185,7 @@ public:
     {
         setName("headerContent");
         title->setName("title");
-        title->setFontSize(13);
+        title->setFontSize(12);
         title->setWeight(500);
         title->setElide(Label::Elide::Middle);
     }
